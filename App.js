@@ -80,10 +80,10 @@ export default function App() {
     }
   };
 
-  function agregarTarea(texto) {
-    if (texto !== '') {
+  function agregarTarea() {
+    if (Texto !== '') {
       let nuevaTarea = {
-        descripcion: texto,
+        descripcion: Texto,
         completada: false,
         timestampCreacion: Date.now(),
       };
@@ -94,9 +94,10 @@ export default function App() {
     }
   }
 
-  const eliminarTarea = (eliminar) => {
-    setTareas(Tareas.filter(tarea => tarea !== eliminar));
-    _storeData();
+  function eliminarTarea (eliminar) {
+    // setTareas(Tareas.filter(tarea => tarea.descripcion !== eliminar));
+    // _storeData();
+    console.log('eliminar')
   };
 
   function ChangeTexto(texto) {
@@ -116,7 +117,7 @@ export default function App() {
         onChangeText={ChangeTexto}
         value={Texto}
       />
-      <Button onPress={() => {agregarTarea(Texto)}} title='Agregar Tarea'/>
+      <Button onPress={agregarTarea} title='Agregar Tarea'/>
       <ListaTareas data={Tareas} eliminarTarea={eliminarTarea}/>
     </View>
   );

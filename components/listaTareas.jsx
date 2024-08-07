@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Dimensions, FlatList, Button, Text} from 'react-native';
 import {CheckBox} from '@rneui/themed';
 
-const Item = ({descripcion, fecha, completada, eliminarTarea}) => (
+const Item = ({descripcion, fecha, completada, eliminar}) => (
   <View style={styles.item}>
     <Text>{descripcion}</Text>
     <Text>{new Date(fecha).toLocaleString()}</Text>
@@ -11,18 +11,22 @@ const Item = ({descripcion, fecha, completada, eliminarTarea}) => (
       checked={completada}
       onPress={() => completada = !(completada)}
     />
-    <Button onPress={() => {eliminarTarea()}} title='Eliminar Tarea'/>
+    <Button onPress={() => {eliminar}} title='Eliminar Tarea'/>
   </View>
 );
 
 const ListaTareas = (data, eliminarTarea) => {
   console.log(data.data);
 
+  const handleEliminar = () => {
+    if(eliminar !== '') eliminarTarea(eliminar);
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
         data={data.data}
-        renderItem={({item}) => <Item descripcion={item.descripcion} fecha={item.timestampCreation} completada={item.completada} eliminarTarea={eliminarTarea}/>}
+        renderItem={({item}) => <Item descripcion={item.descripcion} fecha={item.timestampCreation} completada={item.completada} eliminar={handleEliminar}/>}
       />
     </View>
   );
