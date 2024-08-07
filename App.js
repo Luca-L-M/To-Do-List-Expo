@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+/*import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions} from 'react-native';
 import ListaTareas from './componets/listaTareas';
@@ -51,5 +51,66 @@ const styles = StyleSheet.create({
     flexWrap: 'column',
     justifyContent: 'space-between',
     marginTop: margin,
+  },
+});*/
+
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions } from 'react-native';
+import ListaTareas from './components/listaTareas.jsx';
+
+const windowHeight = Dimensions.get('window').height;
+const margin = windowHeight / 10;
+const padding = windowHeight / 12;
+
+export default function App() {
+  const [Tareas, setTareas] = useState([]);
+  const [Text, setText] = useState('');
+
+  function agregarTarea(text) {
+    if (text !== '') {
+      let nuevaTarea = {
+        descripcion: text,
+        completada: false,
+        timestampCreacion: Date.now(),
+      };
+      // Mete la tarea en el array
+      setTareas([...Tareas, nuevaTarea]);
+      setText('');
+    }
+  }
+
+  const eliminarTarea = (eliminar) => {
+    setTareas(Tareas.filter(tarea => tarea !== eliminar));
+  };
+
+  function ChangeText(text) {
+    setText(text);
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text>Lista de Tareas</Text>
+      <TextInput
+        id="inputTarea"
+        placeholder="Añadir tarea"
+        onChangeText={ChangeText}
+        value={Text}
+      />
+      <Button onPress={() => { agregarTarea(Text) }} title='Agregar Tarea'/>
+      <ListaTareas data={Tareas} eliminarTarea={eliminarTarea}/>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    flexWrap: 'column',
+    justifyContent: 'space-between',
+    marginTop: margin,
+    paddingHorizontal: padding, // Ajusta el padding horizontal según el valor calculado
   },
 });

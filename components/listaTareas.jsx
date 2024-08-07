@@ -15,13 +15,14 @@ const Item = ({tarea, eliminarTarea}) => (
   </View>
 );
 
-const ListaTareas = (data) => {
+const ListaTareas = (data, eliminarTarea) => {
   data.preventDefault();
   return (
     <View style={styles.container}>
         <FlatList
             data={data}
-            renderItem = {({item}) => <Item tarea={item}/>}
+            eliminarTarea={eliminarTarea}
+            renderItem={({item}) => <Item tarea={item}/>}
         />
     </View>
   );
