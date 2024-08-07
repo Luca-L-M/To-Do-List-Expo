@@ -1,13 +1,4 @@
-/*import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions} from 'react-native';
-import ListaTareas from './componets/listaTareas';
-
-const windowHeight = Dimensions.get('window').height;
-const margin = windowHeight / 10;
-const paddin = windowHeight / 12;
-
-export default function App() {
+/*export default function App() {
   const [Tareas, setTareas ]= useState();
   const [Text, setText] = useState('');
 
@@ -54,9 +45,8 @@ const styles = StyleSheet.create({
   },
 });*/
 
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions, AsyncStorage} from 'react-native';
 import ListaTareas from './components/listaTareas.jsx';
 
 const windowHeight = Dimensions.get('window').height;
@@ -65,39 +55,68 @@ const padding = windowHeight / 12;
 
 export default function App() {
   const [Tareas, setTareas] = useState([]);
-  const [Text, setText] = useState('');
+  const [Texto, setTexto] = useState('');
 
-  function agregarTarea(text) {
-    if (text !== '') {
+  _storeData = async () => {
+    try {
+      await AsyncStorage.setItem(
+        '@listaTareas',
+        JSON.stringify(Tareas),
+      );
+    } catch (e) {
+      console.log('error saving data ', e);
+    }
+  };
+
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@listaTareas');
+      if (value !== null){
+        setTareas(JSON.parse(value));
+      }
+      else console.log('No se encontro el Storage');
+    } catch (e) {
+      console.log('error retriving data ', e);
+    }
+  };
+
+  function agregarTarea(texto) {
+    if (texto !== '') {
       let nuevaTarea = {
-        descripcion: text,
+        descripcion: texto,
         completada: false,
         timestampCreacion: Date.now(),
       };
       // Mete la tarea en el array
       setTareas([...Tareas, nuevaTarea]);
-      setText('');
+      setTexto('');
+      _storeData();
     }
   }
 
   const eliminarTarea = (eliminar) => {
     setTareas(Tareas.filter(tarea => tarea !== eliminar));
+    _storeData();
   };
 
-  function ChangeText(text) {
-    setText(text);
+  function ChangeTexto(texto) {
+    setTexto(texto);
   }
+
+  useEffect(() => {
+    _retrieveData();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Lista de Tareas</Text>
+      <Text style={styles.title}>Lista de Tareas</Text>
       <TextInput
         id="inputTarea"
         placeholder="Añadir tarea"
-        onChangeText={ChangeText}
-        value={Text}
+        onChangeText={ChangeTexto}
+        value={Texto}
       />
-      <Button onPress={() => { agregarTarea(Text) }} title='Agregar Tarea'/>
+      <Button onPress={() => {agregarTarea(Texto)}} title='Agregar Tarea'/>
       <ListaTareas data={Tareas} eliminarTarea={eliminarTarea}/>
     </View>
   );
@@ -112,5 +131,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: margin,
     paddingHorizontal: padding, // Ajusta el padding horizontal según el valor calculado
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
