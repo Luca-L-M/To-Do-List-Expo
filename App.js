@@ -94,14 +94,12 @@ export default function App() {
     }
   }
 
-  function eliminarTarea (eliminar) {
-    // setTareas(Tareas.filter(tarea => tarea.descripcion !== eliminar));
-    // _storeData();
-    console.log('eliminar')
-  };
-
   function ChangeTexto(texto) {
     setTexto(texto);
+  }
+  
+  function ChangeTareas(texto) {
+    setTareas(texto);
   }
 
   useEffect(() => {
@@ -118,7 +116,7 @@ export default function App() {
         value={Texto}
       />
       <Button onPress={agregarTarea} title='Agregar Tarea'/>
-      <ListaTareas data={Tareas} eliminarTarea={eliminarTarea}/>
+      <ListaTareas data={Tareas} handleTareas={ChangeTareas}/>
     </View>
   );
 }
