@@ -1,52 +1,5 @@
-/*export default function App() {
-  const [Tareas, setTareas ]= useState();
-  const [Text, setText] = useState('');
-
-  function agregarTarea(text) {
-    console.log(text)
-    if (text !== '') 
-    {
-      let nuevaTarea = {
-        descripcion: text,
-        completada: false,
-        timestampCreacion: Date.now(),
-      };
-      //Mete la tarea en el array
-      setTareas([...tareas, nuevaTarea]);
-      console.log('funca el agregar tarea')
-    }
-  }
-  const eliminarTarea = (eliminar) => {
-    setTareas(Tareas.filter(tarea => tarea !== eliminar));
-  };
-
-  function ChangeText(text) {
-    setText(text);
-  }
-
-  return (
-    <View style={styles.container}>
-      <Text>Lista de Tareas</Text>
-      <TextInput id="inputTarea" placeholder="Añadir tarea" onChangeText={ChangeText(Text)} value={Text}/>
-      <Button onPress={() => {agregarTarea(Text)}} title='Agregar Tarea'/>
-      <ListaTareas data={Tareas} eliminarTarea={eliminarTarea}/>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    flexWrap: 'column',
-    justifyContent: 'space-between',
-    marginTop: margin,
-  },
-});*/
-
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions} from 'react-native';
 import ListaTareas from './components/listaTareas.jsx';
 
 const windowHeight = Dimensions.get('window').height;
@@ -57,28 +10,28 @@ export default function App() {
   const [Tareas, setTareas] = useState([]);
   const [Texto, setTexto] = useState('');
 
-  _storeData = async () => {
-    try {
-      await AsyncStorage.setItem(
-        '@listaTareas',
-        JSON.stringify(Tareas),
-      );
-    } catch (e) {
-      console.log('error saving data ', e);
-    }
-  };
+  // _storeData = async () => {
+  //   try {
+  //     await AsyncStorage.setItem(
+  //       '@listaTareas',
+  //       JSON.stringify(Tareas),
+  //     );
+  //   } catch (e) {
+  //     console.log('error saving data ', e);
+  //   }
+  // };
 
-  _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@listaTareas');
-      if (value !== null){
-        setTareas(JSON.parse(value));
-      }
-      else console.log('No se encontro el Storage');
-    } catch (e) {
-      console.log('error retriving data ', e);
-    }
-  };
+  // _retrieveData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('@listaTareas');
+  //     if (value !== null){
+  //       setTareas(JSON.parse(value));
+  //     }
+  //     else console.log('No se encontro el Storage');
+  //   } catch (e) {
+  //     console.log('error retriving data ', e);
+  //   }
+  // };
 
   function agregarTarea() {
     if (Texto !== '') {
@@ -89,8 +42,8 @@ export default function App() {
       };
       // Mete la tarea en el array
       setTareas([...Tareas, nuevaTarea]);
+      console.log(Tareas);
       setTexto('');
-      _storeData();
     }
   }
 
@@ -98,13 +51,11 @@ export default function App() {
     setTexto(texto);
   }
   
-  function ChangeTareas(texto) {
-    setTareas(texto);
+  function ChangeTareas(eliminar) {
+    console.log(eliminar);
+    const tareaEliminar = Tareas.indexOf(eliminar)
+    setTareas(Tareas.splice(tareaEliminar, 1, null));
   }
-
-  useEffect(() => {
-    _retrieveData();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -116,7 +67,7 @@ export default function App() {
         value={Texto}
       />
       <Button onPress={agregarTarea} title='Agregar Tarea'/>
-      <ListaTareas data={Tareas} handleTareas={ChangeTareas}/>
+      <ListaTareas data={Tareas} eliminarTarea={ChangeTareas}/>
     </View>
   );
 }

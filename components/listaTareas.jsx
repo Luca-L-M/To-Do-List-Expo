@@ -1,28 +1,37 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, Dimensions, FlatList, Button, Text} from 'react-native';
-import Item from './Item.jsx';
+import {CheckBox} from '@rneui/themed';
 
-const ListaTareas = ({data, handleTareas}) => {
-  const tareas = data.data;
+const Item = ({descripcion, fecha, completada, eliminar}) => (
+<View style={styles.item}>
+  <Text>{descripcion}</Text>
+  <Text>{new Date(fecha).toLocaleString()}</Text>
+  <CheckBox
+  title={'Completada'}
+  checked={completada}
+  onPress={() => completada = !(completada)}
+  />
+  <Button onPress={() => {eliminar}} title='Eliminar Tarea'/>
+</View>
+);
 
-  const handleEliminar = (eliminar) => {
-    console.log(eliminar);
-   if(eliminar !== '') {
-     handleTareas(tareas.filter(tarea => tarea !== eliminar));
-     _storeData();
-   }
-}
+const ListaTareas = ({data, eliminarTarea}) => {  
+  
+  const handleEliminar = (a) => {
+    eliminarTarea(a);
+    // if(eliminar !== '') eliminarTarea(eliminar); necesito a jesi :)
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={tareas}
-        renderItem={({item}) => <Item descripcion={item.descripcion} fecha={item.timestampCreation} completada={item.completada} handleEliminar={handleEliminar(item)}/>}
+      data={data}
+      renderItem={({item}) => <Item descripcion={item.descripcion} fecha={item.timestampCreation} completada={item.completada} eliminar={handleEliminar(item)}/>}
       />
     </View>
   );
 };
-
+  
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -36,4 +45,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListaTareas;
+export default ListaTareas
