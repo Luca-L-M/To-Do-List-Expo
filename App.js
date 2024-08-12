@@ -42,7 +42,6 @@ export default function App() {
       };
       // Mete la tarea en el array
       setTareas([...Tareas, nuevaTarea]);
-      console.log(Tareas);
       setTexto('');
     }
   }
@@ -50,11 +49,9 @@ export default function App() {
   function ChangeTexto(texto) {
     setTexto(texto);
   }
-  
-  function ChangeTareas(eliminar) {
-    console.log(eliminar);
-    const tareaEliminar = Tareas.indexOf(eliminar)
-    setTareas(Tareas.splice(tareaEliminar, 1, null));
+
+  function ChangeTareas(tareas) {
+    setTareas(tareas);
   }
 
   return (
@@ -67,7 +64,7 @@ export default function App() {
         value={Texto}
       />
       <Button onPress={agregarTarea} title='Agregar Tarea'/>
-      <ListaTareas data={Tareas} eliminarTarea={ChangeTareas}/>
+      <ListaTareas tareas={Tareas} eliminarTarea={ChangeTareas}/>
     </View>
   );
 }
