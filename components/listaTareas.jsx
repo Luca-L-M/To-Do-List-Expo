@@ -10,7 +10,7 @@ const ListaTareas = ({tareas, eliminarTarea}) => {
       {console.log(tareas)}
       <FlatList
       data={tareas}
-      renderItem={({item}) => <Item tareas={tareas} tarea={item} eliminarTarea={eliminarTarea}/>}
+      renderItem={({item}) => <Item tarea={item} eliminarTarea={eliminarTarea}/>}
       />
     </View>
   );

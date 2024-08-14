@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Button, TextInput, FlatList, Pressable, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, Pressable, TextInput, FlatList, Button, Dimensions} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ListaTareas from './components/listaTareas.jsx';
 
 const windowHeight = Dimensions.get('window').height;
@@ -10,38 +11,16 @@ export default function App() {
   const [Tareas, setTareas] = useState([]);
   const [Texto, setTexto] = useState('');
 
-  // _storeData = async () => {
-  //   try {
-  //     await AsyncStorage.setItem(
-  //       '@listaTareas',
-  //       JSON.stringify(Tareas),
-  //     );
-  //   } catch (e) {
-  //     console.log('error saving data ', e);
-  //   }
-  // };
-
-  // _retrieveData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('@listaTareas');
-  //     if (value !== null){
-  //       setTareas(JSON.parse(value));
-  //     }
-  //     else console.log('No se encontro el Storage');
-  //   } catch (e) {
-  //     console.log('error retriving data ', e);
-  //   }
-  // };
-
   function agregarTarea() {
     if (Texto !== '') {
       let nuevaTarea = {
         descripcion: Texto,
         completada: false,
-        timestampCreacion: Date.now(),
+        fecha: Date.now(),
       };
       // Mete la tarea en el array
       setTareas([...Tareas, nuevaTarea]);
+      saveTareas([...Tareas, nuevaTarea]);
       setTexto('');
     }
   }
@@ -50,9 +29,44 @@ export default function App() {
     setTexto(texto);
   }
 
-  function ChangeTareas(tareas) {
-    setTareas(tareas);
+  function eliminarTarea(eliminar) {
+    console.log(eliminar);
+    const TareasEliminadas = Tareas.filter(tarea => tarea !== eliminar)
+    setTareas(TareasEliminadas);
+    saveTareas(TareasEliminadas);
   }
+
+  function completado(completar) {
+    console.log(completar);
+    const TareasCompletadas = Tareas.filter(tarea => tarea !== eliminar)
+    setTareas(TareasCompletadas);
+    saveTareas(TareasCompletadas);
+  }
+
+  // Guardar items en AsyncStorage
+  const saveTareas = async (nuevaTareas) => {
+    try {
+      await AsyncStorage.setItem('Tareas', JSON.stringify(nuevaTareas));
+    } catch (error) {
+      console.error('Failed to save tarea to AsyncStorage:', error);
+    }
+  };
+
+  // Cargar items desde AsyncStorage al iniciar la app
+  const loadTareas = async () => {
+    try {
+      const storedItems = await AsyncStorage.getItem('Tareas');
+      if (storedItems) {
+        setTareas(JSON.parse(storedItems));
+      }
+    } catch (error) {
+        console.error('Failed to load tareas from AsyncStorage:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadTareas();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -64,7 +78,7 @@ export default function App() {
         value={Texto}
       />
       <Button onPress={agregarTarea} title='Agregar Tarea'/>
-      <ListaTareas tareas={Tareas} eliminarTarea={ChangeTareas}/>
+      <ListaTareas tareas={Tareas} eliminarTarea={eliminarTarea}/>
     </View>
   );
 }

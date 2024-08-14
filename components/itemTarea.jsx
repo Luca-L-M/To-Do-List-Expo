@@ -2,13 +2,12 @@ import React, {useEffect} from 'react';
 import {StyleSheet, View, Dimensions, Button, Text} from 'react-native';
 import {CheckBox} from '@rneui/themed';
 
-const Item = ({tareas, tarea, eliminarTarea}) => {
+const Item = ({tarea, eliminarTarea}) => {
 
-    const handleEliminar = () => {
+    const handleEliminar = (eliminar) => {
     
-        console.log(tarea);
-        const tareaEliminar = tareas.indexOf(tarea)
-        eliminarTarea(tareas.splice(tareaEliminar, 1, null));
+        console.log(eliminar);
+        eliminarTarea(eliminar);
     };
 
     return(
@@ -20,7 +19,7 @@ const Item = ({tareas, tarea, eliminarTarea}) => {
             checked={tarea.completada}
             onPress={() => tarea.completada = !(tarea.completada)}
             />
-            <Button onPress={() => {handleEliminar}} title='Eliminar Tarea'/>
+            <Button onPress={() => {handleEliminar(tarea)}} title='Eliminar Tarea'/>
         </View>
     );
 }
