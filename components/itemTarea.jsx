@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, View, Dimensions, Button, Text} from 'react-native';
-import {CheckBox} from '@rneui/themed';
+import {StyleSheet, View, Dimensions, Button, Text, CheckBox} from 'react-native';
 
-const Item = ({tarea, eliminarTarea}) => {
+const Item = ({tarea, eliminarTarea, completarTarea}) => {
 
     const handleEliminar = (eliminar) => {
     
@@ -10,15 +9,24 @@ const Item = ({tarea, eliminarTarea}) => {
         eliminarTarea(eliminar);
     };
 
+    const handleCompletar = (completar) => {
+    
+        console.log(completar);
+        completarTarea(completar);
+    };
+
     return(
         <View style={styles.item}>
             <Text>{tarea.descripcion}</Text>
             <Text>{new Date(tarea.fecha).toLocaleString()}</Text>
-            <CheckBox
-            title={'Completada'}
-            checked={tarea.completada}
-            onPress={() => tarea.completada = !(tarea.completada)}
-            />
+            <View style={styles.checkboxContainer}>
+                <CheckBox
+                value={tarea.completada}
+                onValueChange={() => {handleCompletar(tarea)}}
+                style={styles.checkbox}
+                />
+                <Text style={styles.label}>Completada</Text>
+            </View>
             <Button onPress={() => {handleEliminar(tarea)}} title='Eliminar Tarea'/>
         </View>
     );
@@ -30,6 +38,16 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 10,
     },
+    checkboxContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+      },
+      checkbox: {
+        alignSelf: 'center',
+      },
+      label: {
+        margin: 8,
+      },
 });
 
 export default Item;

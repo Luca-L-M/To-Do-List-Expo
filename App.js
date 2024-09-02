@@ -29,6 +29,7 @@ export default function App() {
     setTexto(texto);
   }
 
+  //elimina una tarea
   function eliminarTarea(eliminar) {
     console.log(eliminar);
     const TareasEliminadas = Tareas.filter(tarea => tarea !== eliminar)
@@ -36,13 +37,28 @@ export default function App() {
     saveTareas(TareasEliminadas);
   }
 
-  function completado(completar) {
-    console.log(completar);
-    const TareasCompletadas = Tareas.filter(tarea => tarea !== eliminar)
-    setTareas(TareasCompletadas);
-    saveTareas(TareasCompletadas);
-  }
+  //cambia el completado de una tarea
+  // function completarTarea(completar) {
+  //   console.log(completar);
+  //   let tareaCompleta = Tareas.find(tarea => tarea == completar);
+  //   tareaCompleta.completada = !tareaCompleta.completada;
+  //   const indexTarea = (Tareas.indexOf(completar))-1;
+  //   const TareasCompletadas = Tareas.splice(indexTarea, 1, tareaCompleta)
+  //   setTareas(TareasCompletadas);
+  //   saveTareas(TareasCompletadas);
+  // }
 
+  function completarTarea(completar) {
+    console.log(completar);
+    const TareasActualizadas = Tareas.map(tarea => 
+      tarea.fecha === completar.fecha ? 
+      {...tarea, completada: !tarea.completada} : 
+      tarea
+    );
+    setTareas(TareasActualizadas);
+    saveTareas(TareasActualizadas);
+  }
+  
   // Guardar items en AsyncStorage
   const saveTareas = async (nuevaTareas) => {
     try {
@@ -71,14 +87,16 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Lista de Tareas</Text>
-      <TextInput
-        id="inputTarea"
-        placeholder="Añadir tarea"
-        onChangeText={ChangeTexto}
-        value={Texto}
-      />
-      <Button onPress={agregarTarea} title='Agregar Tarea'/>
-      <ListaTareas tareas={Tareas} eliminarTarea={eliminarTarea}/>
+      <View style={styles.textInput}>
+        <TextInput
+          id="inputTarea"
+          placeholder="Añadir tarea"
+          onChangeText={ChangeTexto}
+          value={Texto}
+        />
+        <Button onPress={agregarTarea} title='Agregar Tarea'/>
+        <ListaTareas tareas={Tareas} eliminarTarea={eliminarTarea} completarTarea={completarTarea}/>
+      </View>
     </View>
   );
 }
@@ -89,13 +107,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     flexWrap: 'column',
-    justifyContent: 'space-between',
-    marginTop: margin,
+    margin: 0,
     paddingHorizontal: padding, // Ajusta el padding horizontal según el valor calculado
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  textInput: {
+    marginTop: 5,
     marginBottom: 10,
   },
 });

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, View, Dimensions, FlatList, Button, Text} from 'react-native';
 import Item from './itemTarea.jsx';
 
-const ListaTareas = ({tareas, eliminarTarea}) => {  
+const ListaTareas = ({tareas, eliminarTarea, completarTarea}) => {  
 
   return (
     
@@ -10,7 +10,7 @@ const ListaTareas = ({tareas, eliminarTarea}) => {
       {console.log(tareas)}
       <FlatList
       data={tareas}
-      renderItem={({item}) => <Item tarea={item} eliminarTarea={eliminarTarea}/>}
+      renderItem={({item}) => <Item tarea={item} eliminarTarea={eliminarTarea} completarTarea={completarTarea}/>}
       />
     </View>
   );
