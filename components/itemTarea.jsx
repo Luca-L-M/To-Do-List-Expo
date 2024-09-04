@@ -48,6 +48,12 @@ const styles = StyleSheet.create({
       label: {
         margin: 8,
       },
+      item: {
+        backgroundColor: '#f9c2ff',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+      },
 });
 
 export default Item;

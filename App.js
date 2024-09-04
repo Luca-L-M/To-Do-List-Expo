@@ -87,16 +87,17 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Lista de Tareas</Text>
-      <View style={styles.textInput}>
+      <View style={styles.textInputContainer}>
         <TextInput
           id="inputTarea"
           placeholder="Añadir tarea"
           onChangeText={ChangeTexto}
           value={Texto}
+          style={styles.textInput}
         />
         <Button onPress={agregarTarea} title='Agregar Tarea'/>
-        <ListaTareas tareas={Tareas} eliminarTarea={eliminarTarea} completarTarea={completarTarea}/>
       </View>
+        <ListaTareas tareas={Tareas} eliminarTarea={eliminarTarea} completarTarea={completarTarea}/>
     </View>
   );
 }
@@ -104,7 +105,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#33a492',
     alignItems: 'center',
     flexWrap: 'column',
     margin: 0,
@@ -115,6 +116,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 5,
     marginBottom: 10,
+  },
+  textInputContainer: {
+    marginTop: 5,
+    marginBottom: 20,
   },
   textInput: {
     marginTop: 5,
